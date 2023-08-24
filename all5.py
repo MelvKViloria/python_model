@@ -145,9 +145,9 @@ loaded_model = joblib.load("best_regression_model.pkl")
 
 # Create a new test dataset with the same features as the original dataset
 new_test_data = pd.DataFrame({
-    'Gender': ['0', '1', '0', '1', '0', '1', '0', '1', '0', '1'],  # Replace with your actual new data
-    'Age': [30, 25, 40, 28, 35, 22, 45, 29, 33, 27],                   # Replace with your actual new data
-    'Annual Salary': [70000, 60000, 80000, 65000, 75000, 55000, 85000, 62000, 72000, 59000] # Replace with your actual new data
+    'Gender': ['0', '1', '0', '1', '0', '1', '0', '1', '0', '1'],  
+    'Age': [30, 25, 40, 28, 35, 22, 45, 29, 33, 27],                   
+    'Annual Salary': [70000, 60000, 80000, 65000, 75000, 55000, 85000, 62000, 72000, 59000] 
 })
 
 # Use the loaded model to make predictions on the new test data
