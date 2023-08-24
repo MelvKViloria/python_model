@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+# Saving the best model using joblib
+import joblib
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression, Ridge, Lasso, MultiTaskLasso
 from sklearn.preprocessing import PolynomialFeatures
@@ -100,30 +102,29 @@ fig.delaxes(axs[1, 2])
 plt.tight_layout()
 plt.subplots_adjust(top=0.9)
 
+formatted_mse_values = [f'{mse:.1f}' for mse in mse_values]
+
 # Highlight the best model with a different color in the bar chart
 plt.figure(figsize=(10, 6))
-plt.bar(model_names, mse_values, color='blue')
+plt.bar_label(plt.bar(model_names, mse_values, color='blue'), labels=formatted_mse_values, label_type='edge', fontsize=8)
 plt.xlabel('Model')
 plt.ylabel('Mean Squared Error (MSE)')
 plt.title('Comparison of Mean Squared Error (MSE) among Different Regression Models')
 plt.xticks(rotation=45, ha='right')
 
+
 # Highlight the best model with a different color
 plt.bar(model_names[best_model_index], mse_values[best_model_index], color='green')
 
+
 plt.tight_layout()
 plt.show()
-
-# Print the best model
-best_model_name = model_names[best_model_index]
-best_model_mse = mse_values[best_model_index]
-print(f"The best model is {best_model_name} with a MSE of {best_model_mse:.4f}")
 
 # Retrain the best model on the entire dataset
 best_model = Lasso(alpha=1.0)  # You can replace Lasso with the actual best model
 best_model.fit(X, y)
 
-#(Code for visualization)
+#code for visulisation
 
 # Print the best model
 best_model_name = model_names[best_model_index]
@@ -131,6 +132,29 @@ best_model_mse = mse_values[best_model_index]
 print(f"The best model is {best_model_name} with a MSE of {best_model_mse:.4f}")
 
 # Retrain the best model on the entire dataset
-print("Retraining the best model on the entire dataset...")
+best_model = Lasso(alpha=1.0)  # Replace with the actual best model class
 best_model.fit(X, y)
-print("Retraining completed.")
+
+#saving it
+model_filename = "best_regression_model.pkl"
+joblib.dump(best_model, model_filename)
+print(f"Best model saved as '{model_filename}'")
+
+# Loading the saved model
+loaded_model = joblib.load("best_regression_model.pkl")
+
+# Create a new test dataset with the same features as the original dataset
+new_test_data = pd.DataFrame({
+    'Gender': ['0', '1', '0', '1', '0', '1', '0', '1', '0', '1'],  # Replace with your actual new data
+    'Age': [30, 25, 40, 28, 35, 22, 45, 29, 33, 27],                   # Replace with your actual new data
+    'Annual Salary': [70000, 60000, 80000, 65000, 75000, 55000, 85000, 62000, 72000, 59000] # Replace with your actual new data
+})
+
+# Use the loaded model to make predictions on the new test data
+predictions = loaded_model.predict(new_test_data)
+
+# Print the first 10 predicted car purchase amounts
+print("Predicted Car Purchase Amounts:")
+for idx, prediction in enumerate(predictions, start=1):
+    print(f"Prediction {idx}: {prediction}")
+
